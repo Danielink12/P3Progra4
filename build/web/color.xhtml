@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Listado de colores</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <p:commandButton value="Agregar Color" actionListener="#{colorControl.limpiarColor()}" oncomplete="PF('dialogoAgregar').show();" update=":formAgregar"/>
+            <p:separator/>
+        </h:form>
+        <h:form id="formListado">
+            <p:dataTable id="tablaColores"  paginator="true" paginatorPosition="bottom" rows="10" var="color" value="#{colorControl.listaColores}"  emptyMessage="No existen colores">
+                <p:column headerText="NOMBRE" >
+                    <h:outputText value="#{color.nombre}" />
+                </p:column>
+                <p:column headerText="MODIFICAR" style="text-align: center">
+                    <p:commandButton icon="ui-icon-pencil" title="Modificar" oncomplete="PF('dialogoModificar').show();" update=":formModificar">
+                        <f:setPropertyActionListener target="#{colorControl.color}" value="#{color}"/>
+                    </p:commandButton>
+                </p:column>
+                <p:column headerText="ELIMINAR" style="text-align: center">
+                    <p:commandButton icon="ui-icon-trash" title="Eliminar" oncomplete="PF('dialogoEliminar').show();" update=":formEliminar">
+                        <f:setPropertyActionListener target="#{colorControl.color}" value="#{color}"/>
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+        </h:form>
+
+        <h:form id="formAgregar">
+            <p:dialog id="dlgAgregar" header="Agregar Color" widgetVar="dialogoAgregar" resizable="false" showEffect="fade" hideEffect="explode" modal="true">
+                <p:panelGrid columns="2" style="margin: 0 auto;">                    
+                    <p:outputLabel value="Nombre:"/>
+                    <p:inputText value="#{colorControl.color.nombre}"/>                    
+                </p:panelGrid>
+                <p:commandButton  value="Guardar" actionListener="#{colorControl.agregarColor()}" update=":formListado:tablaColores" oncomplete="PF('dialogoAgregar').hide();"/>
+                <p:commandButton  value="Cancelar" onclick="PF('dialogoAgregar').hide();"/>
+            </p:dialog>
+        </h:form>
+
+        <h:form id="formModificar">
+            <p:dialog id="dlgModificar" header="Modificar Color" widgetVar="dialogoModificar" resizable="false" showEffect="fade" hideEffect="explode" modal="true">
+                <p:panelGrid columns="2" style="margin: 0 auto;">                    
+                    <p:outputLabel value="Nombre:"/>
+                    <p:inputText value="#{colorControl.color.nombre}"/>                   
+                </p:panelGrid>
+                <p:commandButton  value="Guardar" actionListener="#{colorControl.modificarColor()}" update=":formListado:tablaColores" oncomplete="PF('dialogoModificar').hide();"/>
+                <p:commandButton  value="Cancelar" onclick="PF('dialogoModificar').hide();"/>
+            </p:dialog>
+        </h:form>
+
+        <h:form id="formEliminar">
+            <p:dialog id="dlgEliminar" header="Eliminar Color" widgetVar="dialogoEliminar" resizable="false" showEffect="fade" hideEffect="explode" modal="true">
+                <h:outputText value="Desea eliminar este registro?"/>
+                <p:commandButton  value="Si" actionListener="#{colorControl.eliminarColor()}" update=":formListado:tablaColores" oncomplete="PF('dialogoEliminar').hide();"/>
+                <p:commandButton  value="No" onclick="PF('dialogoEliminar').hide();"/>
+            </p:dialog>
+        </h:form>
+    </h:body>
+</html>
